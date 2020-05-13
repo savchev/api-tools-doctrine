@@ -175,7 +175,7 @@ class DoctrineResource extends AbstractResourceListener implements
      *
      * @param ObjectManager|EntityManagerInterface $objectManager
      */
-    public function setObjectManager(ObjectManager $objectManager)
+    public function setObjectManager(ObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
     }
@@ -185,7 +185,7 @@ class DoctrineResource extends AbstractResourceListener implements
      *
      * @return ObjectManager|EntityManagerInterface
      */
-    public function getObjectManager()
+    public function getObjectManager(): ObjectManager
     {
         return $this->objectManager;
     }
