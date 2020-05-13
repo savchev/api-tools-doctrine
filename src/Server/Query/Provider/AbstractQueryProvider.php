@@ -8,7 +8,7 @@
 
 namespace Laminas\ApiTools\Doctrine\Server\Query\Provider;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager as PersistenceObjectManager;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
 use Laminas\ApiTools\Doctrine\Server\Paginator\Adapter\DoctrineOrmAdapter;
 use Laminas\ApiTools\Rest\ResourceEvent;
@@ -17,16 +17,16 @@ use Laminas\Paginator\Adapter\AdapterInterface;
 abstract class AbstractQueryProvider implements ObjectManagerAwareInterface, QueryProviderInterface
 {
     /**
-     * @var ObjectManager
+     * @var PersistenceObjectManager
      */
     protected $objectManager;
 
     /**
      * Set the object manager
      *
-     * @param ObjectManager $objectManager
+     * @param PersistenceObjectManager $objectManager
      */
-    public function setObjectManager(ObjectManager $objectManager)
+    public function setObjectManager(PersistenceObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
     }
@@ -34,9 +34,9 @@ abstract class AbstractQueryProvider implements ObjectManagerAwareInterface, Que
     /**
      * Get the object manager
      *
-     * @return ObjectManager
+     * @return PersistenceObjectManager
      */
-    public function getObjectManager()
+    public function getObjectManager(): PersistenceObjectManager
     {
         return $this->objectManager;
     }
@@ -55,9 +55,7 @@ abstract class AbstractQueryProvider implements ObjectManagerAwareInterface, Que
      */
     public function getPaginatedQuery($queryBuilder)
     {
-        $adapter = new DoctrineOrmAdapter($queryBuilder->getQuery(), false);
-
-        return $adapter;
+        return new DoctrineOrmAdapter($queryBuilder->getQuery(), false);
     }
 
     /**

@@ -15,7 +15,8 @@ use Doctrine\ODM\MongoDB\Query\Builder as MongoDBQueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use DoctrineModule\Persistence\ObjectManagerAwareInterface;
-use DoctrineModule\Stdlib\Hydrator;
+use Doctrine\Persistence\ObjectManager as PersistenceObjectManager;
+use Doctrine\Laminas\Hydrator;
 use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Doctrine\Server\Event\DoctrineResourceEvent;
 use Laminas\ApiTools\Doctrine\Server\Exception\InvalidArgumentException;
@@ -45,7 +46,7 @@ class DoctrineResource extends AbstractResourceListener implements
     protected $sharedEventManager;
 
     /**
-     * @var ObjectManager
+     * @var PersistenceObjectManager
      */
     protected $objectManager;
 
@@ -173,9 +174,9 @@ class DoctrineResource extends AbstractResourceListener implements
     /**
      * Set the object manager
      *
-     * @param ObjectManager|EntityManagerInterface $objectManager
+     * @param PersistenceObjectManager $objectManager
      */
-    public function setObjectManager(ObjectManager $objectManager): void
+    public function setObjectManager(PersistenceObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
     }
@@ -183,18 +184,18 @@ class DoctrineResource extends AbstractResourceListener implements
     /**
      * Get the object manager
      *
-     * @return ObjectManager|EntityManagerInterface
+     * @return PersistenceObjectManager
      */
-    public function getObjectManager(): ObjectManager
+    public function getObjectManager(): PersistenceObjectManager
     {
         return $this->objectManager;
     }
 
     /**
-     * @param array|\Laminas\ApiTools\Doctrine\Server\Query\Provider\QueryProviderInterface[]
+     * @param array|QueryProviderInterface[]
      * @throws InvalidArgumentException if parameter is not an array or \Traversable object
      */
-    public function setQueryProviders($queryProviders)
+    public function setQueryProviders($queryProviders): void
     {
         if (! is_array($queryProviders) && ! $queryProviders instanceof Traversable) {
             throw new InvalidArgumentException('queryProviders must be array or Traversable object');
@@ -311,17 +312,15 @@ class DoctrineResource extends AbstractResourceListener implements
      * @param HydratorInterface $hydrator
      * @return $this
      */
-    public function setHydrator(HydratorInterface $hydrator)
+    public function setHydrator(HydratorInterface $hydrator): void
     {
         $this->hydrator = $hydrator;
-
-        return $this;
     }
 
     /**
      * @return HydratorInterface
      */
-    public function getHydrator()
+    public function getHydrator(): ?HydratorInterface
     {
         if (! $this->hydrator) {
             // FIXME: find a way to test this line from a created API.  Shouldn't all created API's have a hydrator?
